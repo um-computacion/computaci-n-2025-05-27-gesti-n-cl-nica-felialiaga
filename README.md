@@ -2,7 +2,7 @@
 # 🏥 Sistema de Gestión para una Clínica
 
 # PROYECTO
--El proyecto se basa en un sistema para la gestion de una clinica, como sus pacientes, medicos, turnos, etc..
+- El proyecto se basa en un sistema para la gestion de una clinica, como sus pacientes, medicos, turnos, etc..
 - El proyecto tiene dividido por un lado los tests, el cli y una carpeta modelo para las clases y excepciones.
 ## Ejecucion del sistema
 1- Clona el repositorio o descarga los archivos
