@@ -1,26 +1,26 @@
 class PacienteNoEncontradoExcepcion(Exception):
-    print('No se ha encontrado al paciente.')
+    pass
 
 class MedicoNoEncontrado(Exception):
-    print("No se ha encontrado al medico.")
+    pass
 
 class MedicoNoDisponibleExcepcion(Exception):
-    print("El medico no se encuentra disponible ese dia")
+    pass
 
 class TurnoOcupadoException(Exception):
-    print('El turno solicitado ya se encuentra ocupado.')
+    pass
 
 class RecetaInvalidaException(Exception):
     pass
 
 class ErrorAlAgregarPaciente(Exception):
-    print("Ocurrio un error al agregar al paciente.")
+    pass
 
 class ErrorAlAgregarMedico(Exception):
-    print("Ocurrio un error al agregar el medico.")
+    pass
 
 class EspecialidadYaExistente(Exception):
-    print("Esta especialidad ya le corresponde al medico.")
+    pass
 
 class ErrorGeneralTurno(Exception):
     pass

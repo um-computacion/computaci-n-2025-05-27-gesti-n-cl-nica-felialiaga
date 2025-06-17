@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 from modelo.Turnosclinica import (Paciente, Medico, Clinica, Especialidad)
-from modelo.excepciones import (ErrorAlAgregarMedico, ErrorAlAgregarPaciente, ErrorGeneralTurno)
+from modelo.excepciones import (ErrorAlAgregarMedico, ErrorAlAgregarPaciente, ErrorGeneralTurno, PacienteNoEncontradoExcepcion, MedicoNoDisponibleExcepcion, TurnoOcupadoException, ErrorPaciente, ErrorMedico, RecetaInvalidaException, EspecialidadYaExistente)
 from datetime import datetime
 
 clinica = Clinica()
@@ -23,13 +23,12 @@ def menu():
         print("9- Ver todos los Medicos")
         print("0- Salir")
 
-        opcion = int(input("Seleccione una opcion: "))
+        try:
+            opcion = int(input("Seleccione una opcion: "))
 
-        if opcion == 1:
+            if opcion == 1:
 
-            print("Agregar Paciente")
-
-            try:
+                print("Agregar Paciente")
 
                 nombre = input("Ingrese el nombre: ")
                 apellido = input("Ingrese el apellido: ")
@@ -41,15 +40,11 @@ def menu():
                 clinica.agregar_paciente(paciente)
 
                 print("Paciente Agregado Correctamente!")
-            except:
-                raise ErrorAlAgregarPaciente()
-        
-        if opcion == 2:
+            
+            if opcion == 2:
 
-            print("Agregar Medico")
+                print("Agregar Medico")
 
-            try:
-                
                 nombre = input("Ingrese el nombre: ")
                 apellido = input("Ingrese el apellido: ")
                 matricula = input("Ingrese el numero de matricula: ")
@@ -65,85 +60,114 @@ def menu():
                 clinica.agregar_medico(nuevoMedico)
 
                 print("Medico Agregado Correctamente!")
+            
+            if opcion == 3:
 
-            except:
-                raise ErrorAlAgregarMedico()
+                print("Agendar Turno")
+
+                
+                dni = input("Ingrese el dni del paciente: ")
+                matricula = input("Ingrese la matricula del medico: ")
+                especialidad = input("Ingrese la especialidad del medico: ")
+                fechaHora = input("Ingrese la fecha y la hora del turno(dd/mm/aaaa hh:mm): ")
+
+                clinica.agendar_turno(dni, matricula, especialidad, fechaHora)
+                print("Turno agendado correctamente.")
+
+            if opcion == 4:
+                matricula = input("Ingrese la matricula del medico: ")
+                tipo = input("Indique el tipo de especialidad: ")
+                dias = [input("Dias de atencion(separados por coma): ").split(',')]
+
+                medico = clinica.obtener_medico_por_matricula(matricula)
+                especialidad = Especialidad(tipo, dias)
+
+                medico.agregar_especialidad(especialidad)
+
+                print('Especialidad agregada.')
+
+            if opcion == 5:
+                dni = input("Ingrese el dni del paciente: ")
+                matricula = input("Ingrese la matricula del medico: ")
+                medicamentos = [m.strip() for m in input("Ingrese los medicamnetos(separados por coma): ").split(",") if m.strip()]
+
+                clinica.emitir_receta(dni, matricula, medicamentos)
+
+                print("Receta emitida correctamente.")
+            
+            if opcion == 6:
+                dni = input("Ingrese el dni del paciente: ")
+                print(f'Historia Clinica de Paciente con dni numero {dni}')
+                
+                historia = clinica.obtener_historia_clinica(dni)
+                print(historia)
+
+            if opcion == 7:
+                print("Todos los turnos")
+
+                turnos = clinica.obtener_turnos()
+
+                if len(turnos) == 0:
+                    print("No hay turnos agendados")
+                else:
+                    for t in turnos:
+                        print(t)
+
+            if opcion == 8:
+                print("Todos los Pacientes: ")
+                
+                pacientes = clinica.obtener_pacientes()
+
+                if len(pacientes) == 0:
+                    print("Todavia no hay pacientes registrados.")
+                else:
+                    for p in pacientes:
+                        print(pacientes[p])
+
+            if opcion == 9:
+                print("Todos los Medicos: ")
+                
+                medicos = clinica.obtener_medicos()
+
+                if len(medicos) == 0:
+                    print("Todavia no hay medicos registrados.")
+                else:
+                    for m in medicos:
+                        print(medicos[m])
+
+            if opcion == 0:
+                exit()
+
+        except ErrorGeneralTurno as e:
+            print(e)
+
+        except ErrorAlAgregarPaciente as e:
+            print(e)
+
+        except ErrorAlAgregarMedico as e:
+            print(e)
         
-        if opcion == 3:
+        except PacienteNoEncontradoExcepcion as e:
+            print(e)
 
-            print("Agendar Turno")
+        except MedicoNoDisponibleExcepcion as e:
+            print(e)
 
-            
-            dni = input("Ingrese el dni del paciente: ")
-            matricula = input("Ingrese la matricula del medico: ")
-            especialidad = input("Ingrese la especialidad del medico: ")
-            fechaHora = input("Ingrese la fecha y la hora del turno(dd/mm/aaaa hh:mm): ")
+        except TurnoOcupadoException as e:
+            print(e)
 
-            clinica.agendar_turno(dni, matricula, especialidad, fechaHora)
-            print("Turno agendado correctamente.")
+        except ErrorPaciente as e:
+            print(e)
 
-        if opcion == 4:
-           matricula = input("Ingrese la matricula del medico: ")
-           tipo = input("Indique el tipo de especialidad: ")
-           dias = [input("Dias de atencion(separados por coma): ").split(',')]
-
-           medico = clinica.obtener_medico_por_matricula(matricula)
-           especialidad = Especialidad(tipo, dias)
-
-           medico.agregar_especialidad(especialidad)
-
-           print('Especialidad agregada.')
-
-        if opcion == 5:
-            dni = input("Ingrese el dni del paciente: ")
-            matricula = input("Ingrese la matricula del medico: ")
-            medicamentos = [m.strip() for m in input("Ingrese los medicamnetos(separados por coma): ").split(",") if m.strip()]
-
-            clinica.emitir_receta(dni, matricula, medicamentos)
-
-            print("Receta emitida correctamente.")
+        except ErrorMedico as e:
+            print(e)
         
-        if opcion == 6:
-            dni = input("Ingrese el dni del paciente: ")
-            print(f'Historia Clinica de Paciente con dni numero {dni}')
-            
-            historia = clinica.obtener_historia_clinica(dni)
-            print(historia)
+        except RecetaInvalidaException as e:
+            print(e)
 
-        if opcion == 7:
-            print("Todos los turnos")
+        except EspecialidadYaExistente as e:
+            print(e)
 
-            turnos = clinica.obtener_turnos()
 
-            if len(turnos) == 0:
-                print("No hay turnos agendados")
-            else:
-                for t in turnos:
-                    print(t)
-
-        if opcion == 8:
-            print("Todos los Pacientes: ")
-            
-            pacientes = clinica.obtener_pacientes()
-
-            if len(pacientes) == 0:
-                print("Todavia no hay pacientes registrados.")
-            else:
-                for p in pacientes:
-                    print(pacientes[p])
-
-        if opcion == 9:
-            print("Todos los Medicos: ")
-            
-            medicos = clinica.obtener_medicos()
-
-            if len(medicos) == 0:
-                print("Todavia no hay medicos registrados.")
-            else:
-                for m in medicos:
-                    print(medicos[m])
-
-        if opcion == 0:
-            exit()
 if __name__ == "__main__":
     menu()

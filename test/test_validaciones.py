@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import unittest
 from datetime import datetime
 from modelo.Turnosclinica import validar_existencia_paciente, validar_existencia_medico, validar_turno_no_duplicado, obtener_dia_semana_en_espanol, validar_especialidad_en_dia
@@ -42,7 +46,7 @@ class TestValidaciones(unittest.TestCase):
 
     def test_validar_turno_no_duplicado_error(self):
    
-        from validaciones import validar_turno_no_duplicado as vtn
+        from modelo.Turnosclinica import validar_turno_no_duplicado as vtn
 
         class StubTurnos:
             def __init__(self, turnos):
@@ -60,17 +64,17 @@ class TestValidaciones(unittest.TestCase):
 
     def test_obtener_dia_semana_en_espanol(self):
        
-        from validaciones import obtener_dia_semana_en_espanol
+        from modelo.Turnosclinica import obtener_dia_semana_en_espanol
         dia = obtener_dia_semana_en_espanol("01/07/2025 10:00")
         self.assertEqual(dia, "martes")
 
     def test_validar_especialidad_en_dia_ok(self):
       
-        from validaciones import validar_especialidad_en_dia
+        from modelo.Turnosclinica import validar_especialidad_en_dia
         validar_especialidad_en_dia(self.medicos["1111"], "Cardiologia", "lunes")
 
     def test_validar_especialidad_en_dia_error(self):
-        from validaciones import validar_especialidad_en_dia
+        from modelo.Turnosclinica import validar_especialidad_en_dia
         with self.assertRaises(MedicoNoDisponibleExcepcion):
             validar_especialidad_en_dia(self.medicos["1111"], "Cardiologia", "domingo")
 

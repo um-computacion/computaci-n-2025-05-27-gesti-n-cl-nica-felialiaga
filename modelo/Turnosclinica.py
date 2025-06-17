@@ -49,7 +49,7 @@ class Medico:
         nombres = [n.obtener_especialidad() for n in self.__especialidades]
 
         if( especialidad.obtener_especialidad() in nombres ):
-            raise EspecialidadYaExistente()
+            raise EspecialidadYaExistente("Esta especialidad ya se encuentra registrada.")
         else:
             self.__especialidades.append(especialidad)
 
@@ -120,20 +120,24 @@ class Clinica:
 
     def validar_existencia_paciente(self, dni):
         if dni not in self.__pacientes:
-            raise PacienteNoEncontradoExcepcion()
+            raise PacienteNoEncontradoExcepcion("No se ha encontrado al paciente")
             
     def validar_existencia_medico(self, matricula):
         if matricula not in  self.__medicos:
-            raise MedicoNoDisponibleExcepcion()
+            raise MedicoNoDisponibleExcepcion("No se ha encontrado al medico.")
 
     def validar_turno_no_duplicado(self, matricula, fecha_hora):
 
         for t in self.__turnos:
+
             if(t.obtener_medico().obtener_matricula() == matricula and t.obtener_fecha_hora() == fecha_hora):
-                raise TurnoOcupadoException()
-                    
+                raise TurnoOcupadoException("El turno ya se encuentra ocupado.")
+
     def obtener_dia_semana_en_espanol(self, fecha_hora: datetime):
         dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+
+        if dias[fecha_hora.weekday()] == 'domingo':
+            raise ErrorGeneralTurno("Los domingos la clinica se encuentra cerrada.")
 
         return dias[fecha_hora.weekday()]
 
@@ -141,10 +145,10 @@ class Clinica:
         return medico.obtener_especialidad_para_dia(dia)
 
     def validar_especialidad_en_dia(self, medico: Medico, especialidad, dia):
-        med = self.obtener_especialidad_disponible(medico, dia)
+        esp = self.obtener_especialidad_disponible(medico, dia)
 
-        if med == None or med.lower() != especialidad.lower():
-            raise MedicoNoDisponibleExcepcion("El medico no se encuentra disponible.")
+        if esp == None or esp.lower() != especialidad.lower():
+            raise MedicoNoDisponibleExcepcion("El medico no atiende esa especialidad ese dia.")
 
     #--------------------------------------------------------------
 
@@ -177,26 +181,23 @@ class Clinica:
 
     def agendar_turno(self, dni, matricula, especialidad, fecha_hora):
 
-        try:
-            fecha = datetime.strptime(fecha_hora, "%d/%m/%Y %H:%M")
+        
+        fecha = datetime.strptime(fecha_hora, "%d/%m/%Y %H:%M")
 
-            self.validar_existencia_medico(matricula)
-            self.validar_existencia_paciente(dni)
-            self.validar_turno_no_duplicado(matricula, fecha)
+        self.validar_existencia_medico(matricula)
+        self.validar_existencia_paciente(dni)
+        self.validar_turno_no_duplicado(matricula, fecha)
 
-            medico = self.__medicos[matricula]
-            paciente = self.__pacientes[dni]
-            dia = self.obtener_dia_semana_en_espanol(fecha)
+        medico = self.__medicos[matricula]
+        paciente = self.__pacientes[dni]
+        dia = self.obtener_dia_semana_en_espanol(fecha)
 
-            self.validar_especialidad_en_dia(medico, especialidad, dia)
+        self.validar_especialidad_en_dia(medico, especialidad, dia)
 
-            turno = Turno(paciente, medico, fecha_hora, especialidad)
+        turno = Turno(paciente, medico, fecha, especialidad)
 
-            self.__turnos.append(turno)
-            self.__historias_clinicas[dni].agregar_turno(turno)
-        except:
-            raise ErrorGeneralTurno("Ocurrio un error al agendar el turno.")
-
+        self.__turnos.append(turno)
+        self.__historias_clinicas[dni].agregar_turno(turno)
 
     def obtener_turnos(self):
         return self.__turnos
@@ -213,7 +214,6 @@ class Clinica:
         nuevaReceta =  Receta(paciente, medico, medicamentos)
         
         self.__historias_clinicas[dni].agregar_receta(nuevaReceta)
-
 
     def obtener_historia_clinica(self, dni):
         self.validar_existencia_paciente(dni)
