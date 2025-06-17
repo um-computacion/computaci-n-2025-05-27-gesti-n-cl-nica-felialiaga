@@ -10,7 +10,7 @@
 3- Ejecuta el comando "python cli/cliClinica.py"
 - En mi caso no lo hago con python3 porque me daba errores, asi que tuve que desactivar ese alias.
 ## Ejecucion de Pruebas
-- Desde la raiz ejecuta: "python -m unittest discover -s test"
+- Desde la raiz ejecuta: "python -m unittest test/archivo"
 - Una vez ejecutado ese comando se correran todas las pruebas unitarias ubicadas en la carpeta test
 
 ## 👤 Información del Alumno
