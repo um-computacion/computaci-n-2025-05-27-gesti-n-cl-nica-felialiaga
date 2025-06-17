@@ -1,11 +1,27 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/y_fEcNZn)
 # 🏥 Sistema de Gestión para una Clínica
+
+<<<<<<< HEAD
+=======
+# PROYECTO
+- El proyecto se basa en un sistema para la gestion de una clinica, como sus pacientes, medicos, turnos, etc..
+- El proyecto tiene dividido por un lado los tests, el cli y una carpeta modelo para las clases y excepciones.
+## Ejecucion del sistema
+1- Clona el repositorio o descarga los archivos
+2- Abri la terminal en la carpeta raiz del proyecto
+3- Ejecuta el comando "python cli/cliClinica.py"
+- En mi caso no lo hago con python3 porque me daba errores, asi que tuve que desactivar ese alias.
+## Ejecucion de Pruebas
+- Desde la raiz ejecuta: "python -m unittest test/archivo"
+- Una vez ejecutado ese comando se correran todas las pruebas unitarias ubicadas en la carpeta test
+>>>>>>> a4fcf049f00f347de9f24dd525703c10d748e509
 
 ## 👤 Información del Alumno
 
 ### 📋 Datos Personales
-- **Nombre y Apellido**: [Completar con nombre y apellido]
+- **Nombre y Apellido**: Felipe Aliaga
 - **Ciclo Lectivo**: 2025
-- **Carrera**: [Completar con nombre de la carrera]
+- **Carrera**: Ingenieria Informatica
 
 ## ⏰ Información Importante sobre la Entrega
 
